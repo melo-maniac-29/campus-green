@@ -26,7 +26,7 @@ import { Badge } from "@/components/ui/badge";
 import { Web3Auth } from "@web3auth/modal"; // Import the Web3Auth class from the @web3auth/modal package
 import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from "@web3auth/base"; // Import the CHAIN_NAMESPACES, IProvider, and WEB3AUTH_NETWORK constants
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
-// import { useMediaQuery } from "@/hooks/useMediaQuery"
+import { useMediaQuery } from "@/hooks/useMediaQuery"
 import {
   createUser,
   getUnreadNotifications,
@@ -35,11 +35,10 @@ import {
   getUserBalance,
 } from "@/utils/db/actions";
 
-const clientId =
-  "BJKdDFkNtkWX87XqkuWrDu4rbkSvWyQZ5lswS0ucINxxcN0inRVW8zzKAywPPzgiOHP7_3PcfFwfpvcQvSdaLRs";
+const clientId = process.env.WEB3_AUTH_CLIENT_ID; // Get the client ID from the environment variables
 
-const chainConfig = {
-  chainNamespace: CHAIN_NAMESPACES.EIP155,
+const chainConfig = { // Define the chain configuration object
+  chainNamespace: CHAIN_NAMESPACES.EIP155, // Changed from ETHEREUM to EIP155 for Sepolia Testnet
   chainId: "0xaa36a7",
   rpcTarget: "https://rpc.ankr.com/eth_sepolia",
   displayName: "Ethereum Sepolia Testnet",
@@ -53,7 +52,7 @@ const privateKeyProvider = new EthereumPrivateKeyProvider({
   config: { chainConfig },
 });
 
-const web3auth = new Web3Auth({
+const web3auth = new Web3Auth({  //web3auth instance
   clientId,
   web3AuthNetwork: WEB3AUTH_NETWORK.TESTNET, // Changed from SAPPHIRE_MAINNET to TESTNET
   privateKeyProvider,
