@@ -35,27 +35,24 @@ from .models import WasteItem
 
 def scan_waste(request):
     if not request.user.is_authenticated:
-        print("ai")
         return redirect('login')
     
     if request.method == 'POST' and 'waste_image' in request.FILES:
-        # Save uploaded image
+        # Get uploaded image
         uploaded_file = request.FILES['waste_image']
-        fs = FileSystemStorage()
-        filename = fs.save(uploaded_file.name, uploaded_file)
         
         # Mock detection (Replace with actual ML model)
-        detected_type = "Plastic Bottle" if "bottle" in filename.lower() else "Other"
+        detected_type = "Plastic Bottle" if "bottle" in uploaded_file.name.lower() else "Other"
         points = 10 if detected_type == "Plastic Bottle" else 2
         bin_type = 'R' if detected_type == "Plastic Bottle" else 'L'
         
-        # Create waste item record
+        # Create waste item record (Django handles file saving)
         waste_item = WasteItem.objects.create(
             user=request.user,
             item_type=detected_type,
             points=points,
             bin_type=bin_type,
-            image=uploaded_file  # Save the uploaded image
+            image=uploaded_file  # Django will automatically save the file
         )
         
         return render(request, 'result.html', {
