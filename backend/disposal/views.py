@@ -1,9 +1,12 @@
-from django.shortcuts import render
-
-# Create your views here.
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
+from google.cloud import vision
+from django.core.files.storage import FileSystemStorage
+from .models import WasteItem, QRCode
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import re
 
 def register(request):
     if request.method == 'POST':
@@ -28,11 +31,6 @@ def login_view(request):
             return render(request, 'login.html', {'error': 'Invalid credentials'})
     return render(request, 'login.html')
 
-
-from django.shortcuts import render, redirect
-from django.core.files.storage import FileSystemStorage
-from .models import WasteItem,QRCode
-
 def scan_waste(request):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -41,21 +39,157 @@ def scan_waste(request):
         # Get uploaded image
         uploaded_file = request.FILES['waste_image']
         
-        # Mock detection (Replace with actual ML model)
-        detected_type = "Plastic Bottle" if "bottle" in uploaded_file.name.lower() else "Other"
-        points = 10 if detected_type == "Plastic Bottle" else 2
-        bin_type = 'Recycling' if detected_type == "Plastic Bottle" else 'Recycling'
+        # Initialize Google Cloud Vision client
+        client = vision.ImageAnnotatorClient()
         
-        # Create waste item record (Django handles file saving)
+        # Read the image file
+        image_content = uploaded_file.read()
+        image = vision.Image(content=image_content)
+        
+        # Perform label detection
+        response = client.label_detection(image=image)
+        labels = response.label_annotations
+        
+        # Determine waste type and points based on labels
+        detected_type = "Other"
+        points = 2
+        bin_type = 'Recycling'
+        
+        for label in labels:
+            if "bottle" in label.description.lower():
+                detected_type = "Plastic Bottle"
+                points = 10
+                bin_type = 'Recycling'
+                break
+            elif "can" in label.description.lower():
+                detected_type = "Aluminum Can"
+                points = 5
+                bin_type = 'Recycling'
+                break
+            elif "banana" in label.description.lower() or "apple" in label.description.lower():
+                detected_type = "Food Waste"
+                points = 15
+                bin_type = 'Compost'
+                break
+            elif "paper" in label.description.lower() or "cardboard" in label.description.lower():
+                detected_type = "Paper Waste"
+                points = 8
+                bin_type = 'Recycling'
+                break
+            elif "orange peel" in label.description.lower() or "kiwi" in label.description.lower():
+                detected_type = "Food Waste"
+                points = 15
+                bin_type = 'Compost'
+                break
+            elif "lettuce" in label.description.lower() or "spinach" in label.description.lower():
+                detected_type = "Food Waste"
+                points = 15
+                bin_type = 'Compost'
+                break
+            elif "egg shell" in label.description.lower() or "coffee grounds" in label.description.lower():
+                detected_type = "Food Waste"
+                points = 15
+                bin_type = 'Compost'
+                break
+            elif "straw" in label.description.lower() or "toothpick" in label.description.lower():
+                detected_type = "General Waste"
+                points = 2
+                bin_type = 'General Waste'
+                break
+            elif "plastic wrap" in label.description.lower() or "styrofoam" in label.description.lower():
+                detected_type = "General Waste"
+                points = 3
+                bin_type = 'General Waste'
+                break
+            elif "napkin" in label.description.lower() or "paper towel" in label.description.lower():
+                detected_type = "General Waste"
+                points = 4
+                bin_type = 'General Waste'
+                break
+            elif "meat" in label.description.lower() or "fish" in label.description.lower():
+                detected_type = "Food Waste"
+                points = 15
+                bin_type = 'Compost'
+                break
+            elif "cereal box" in label.description.lower() or "pizza box" in label.description.lower():
+                detected_type = "Paper Waste"
+                points = 8
+                bin_type = 'Recycling'
+                break
+            elif "glass" in label.description.lower():
+                detected_type = "Glass Bottle"
+                points = 10
+                bin_type = 'Recycling'
+                break
+            elif "plastic bag" in label.description.lower():
+                detected_type = "Plastic Bag"
+                points = 2
+                bin_type = 'General Waste'
+                break
+            elif "batteries" in label.description.lower():
+                detected_type = "Batteries"
+                points = 0
+                bin_type = 'Hazardous Waste'
+                break
+            elif "light bulb" in label.description.lower():
+                detected_type = "Light Bulb"
+                points = 0
+                bin_type = 'Hazardous Waste'
+                break
+            elif "diaper" in label.description.lower():
+                detected_type = "Diaper"
+                points = 2
+                bin_type = 'General Waste'
+                break
+            elif "plastic utensils" in label.description.lower() or "straw" in label.description.lower():
+                detected_type = "Plastic Utensils"
+                points = 2
+                bin_type = 'General Waste'
+                break
+            elif "candy wrapper" in label.description.lower() or "chip bag" in label.description.lower():
+                detected_type = "Snack Wrapper"
+                points = 1
+                bin_type = 'General Waste'
+                break
+            elif "old clothes" in label.description.lower() or "shoes" in label.description.lower():
+                detected_type = "Textile Waste"
+                points = 5
+                bin_type = 'General Waste'
+                break
+            elif "furniture" in label.description.lower():
+                detected_type = "Furniture Waste"
+                points = 0
+                bin_type = 'Bulky Waste'
+                break
+            elif "electronics" in label.description.lower():
+                detected_type = "Electronic Waste"
+                points = 0
+                bin_type = 'E-Waste'
+                break
+            elif "wood" in label.description.lower():
+                detected_type = "Wood Waste"
+                points = 5
+                bin_type = 'General Waste'
+                break
+            elif "garden waste" in label.description.lower() or "leaves" in label.description.lower():
+                detected_type = "Garden Waste"
+                points = 15
+                bin_type = 'Compost'
+                break
+            # Add more conditions for other waste types
+        
+        # Create waste item record
         waste_item = WasteItem.objects.create(
             user=request.user,
             item_type=detected_type,
             points=points,
             bin_type=bin_type,
-            image=uploaded_file  # Django will automatically save the file
+            image=uploaded_file
         )
+        
+        # Get bin locations
         bin_locations = get_bin_locations(bin_type)
-
+        
         return render(request, 'bindetails.html', {
             'item': waste_item,
             'locations': bin_locations
@@ -68,12 +202,6 @@ def get_bin_locations(bin_type):
     bins = QRCode.objects.filter(bin_type=bin_type)
     locations = [{'name': bin.location, 'qr_code': bin.unique_id} for bin in bins]
     return locations
-import re
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-
-import re
-from .models import QRCode
 
 @csrf_exempt
 def scan_qr_code(request):
@@ -108,9 +236,6 @@ def scan_qr_code(request):
             return JsonResponse({'message': 'Something went wrong.'})
 
     return render(request, 'scan_qr.html')
-
-
-
 
 def confirm_page(request):
     bin_id = request.GET.get('bin_id')

@@ -25,7 +25,6 @@ SECRET_KEY = 'django-insecure-0y^91)1q-&e21g1-(fjwlkxyle&%)g#y!$u3d(*zz7fv%psfxh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -83,8 +82,16 @@ DATABASES = {
     }
 }
 
-ALLOWED_HOSTS = ['localhost','a3a1-117-232-108-34.ngrok-free.app','127.0.0.1']
+ALLOWED_HOSTS = ['localhost','*','127.0.0.1']
 
+import os
+
+# Set the environment variable for Google Cloud credentials
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:\\Users\\amilm\\Code\\RIT_HACKATHON\\campus-green\\backend\\disposal\\lustrous-braid-452220-u1-e95af2db2501.json"
+
+# Media File Settings
+MEDIA_URL = '/media/'  # URL for accessing media files
+MEDIA_ROOT = BASE_DIR / 'media'  # Folder where media files will be stored
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -131,5 +138,5 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_TRUSTED_ORIGINS=[
-    'https://a3a1-117-232-108-34.ngrok-free.app',
+    'https://82c3-117-232-108-34.ngrok-free.app',
 ]
