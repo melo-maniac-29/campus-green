@@ -68,5 +68,57 @@ def get_bin_locations(bin_type):
     bins = QRCode.objects.filter(bin_type=bin_type)
     locations = [{'name': bin.location, 'qr_code': bin.unique_id} for bin in bins]
     return locations
+import re
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+import re
+from .models import QRCode
+
+@csrf_exempt
+def scan_qr_code(request):
+    if request.method == 'POST':
+        try:
+            import json
+            data = json.loads(request.body)
+            qr_code_id = data.get('qr_code_id')
+            detected_bin_type = data.get('detected_bin_type')
+
+            match = re.search(r'bin-\d+', qr_code_id)
+            if match:
+                bin_id = match.group()
+                print("Extracted Bin ID:", bin_id)
+
+                qr_code = QRCode.objects.get(unique_id=bin_id)
+
+                if qr_code.bin_type == detected_bin_type:
+                    return JsonResponse({
+                        'redirect': '/confirm/',
+                        'bin_id': bin_id,
+                        'bin_type': detected_bin_type
+                    })
+                else:
+                    return JsonResponse({'message': 'Incorrect bin type. Please scan the correct bin.'})
+            else:
+                return JsonResponse({'message': 'Invalid QR code format.'})
+        except QRCode.DoesNotExist:
+            return JsonResponse({'message': 'QR code not found.'})
+        except Exception as e:
+            print("Error:", e)
+            return JsonResponse({'message': 'Something went wrong.'})
+
+    return render(request, 'scan_qr.html')
 
 
+
+
+def confirm_page(request):
+    bin_id = request.GET.get('bin_id')
+    bin_type = request.GET.get('bin_type')
+
+    qr_code = QRCode.objects.get(unique_id=bin_id)
+
+    return render(request, 'confirm.html', {
+        'qr_code': qr_code,
+        'detected_bin_type': bin_type
+    })
