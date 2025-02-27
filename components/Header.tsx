@@ -75,7 +75,7 @@ export default function Header({ onMenuClick, totalEarnings }: HeaderProps) { //
 
   console.log("user info", userInfo);
 
-  useEffect(() => { //useEffect hook for initializing the web3auth
+  useEffect(() => { //useEffect hook for initializing the web3auth and create user for us 
     const init = async () => {
       try {
         await web3auth.initModal();
