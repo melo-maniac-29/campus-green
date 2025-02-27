@@ -48,7 +48,7 @@ const chainConfig = { // Define the chain configuration object
   logo: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
 };
 
-const privateKeyProvider = new EthereumPrivateKeyProvider({
+const privateKeyProvider = new EthereumPrivateKeyProvider({  //its for private key provider for each chain
   config: { chainConfig },
 });
 
@@ -58,12 +58,12 @@ const web3auth = new Web3Auth({  //web3auth instance
   privateKeyProvider,
 });
 
-interface HeaderProps {
-  onMenuClick: () => void;
-  totalEarnings: number;
+interface HeaderProps {  //HeaderProps interface
+  onMenuClick: () => void;  //onMenuClick function
+  totalEarnings: number; //totalEarnings number 
 }
 
-export default function Header({ onMenuClick, totalEarnings }: HeaderProps) {
+export default function Header({ onMenuClick, totalEarnings }: HeaderProps) { //header main function
   const [provider, setProvider] = useState<IProvider | null>(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -75,7 +75,7 @@ export default function Header({ onMenuClick, totalEarnings }: HeaderProps) {
 
   console.log("user info", userInfo);
 
-  useEffect(() => {
+  useEffect(() => { //useEffect hook for initializing the web3auth
     const init = async () => {
       try {
         await web3auth.initModal();
