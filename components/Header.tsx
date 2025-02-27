@@ -5,12 +5,14 @@ import Link from "next/link"
 import { usePathname } from 'next/navigation' // Import the usePathname hook
 import { Button } from "@/components/ui/button"
 import { Menu, Coins, Leaf, Search, Bell, User, ChevronDown, LogIn, LogOut } from "lucide-react"
+
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu"
+
 import { Badge } from "@/components/ui/badge"
 import { Web3Auth } from "@web3auth/modal"
 import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from "@web3auth/base"
