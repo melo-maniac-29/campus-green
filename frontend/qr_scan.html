@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoTrack Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #f8f9fa;
+            color: #2d3436;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .scan-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        .camera-feed {
+            width: 100%;
+            height: 400px;
+            border-radius: 8px;
+            margin: 1rem 0;
+            background: #2d3436;
+        }
+
+        .button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+        }
+
+        .primary-btn {
+            background: #00b894;
+            color: white;
+        }
+
+        .secondary-btn {
+            background: #dfe6e9;
+            color: #2d3436;
+        }
+
+        .details-section {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+        }
+
+        .status-card {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .status-item {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #00b894;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        .result-section {
+            display: none;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .success-icon, .error-icon {
+            width: 80px;
+            height: 80px;
+            margin: 1rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Main Scan Card -->
+        <div class="scan-card">
+            <h2>Environmental Impact Scanner</h2>
+            <p class="subtext">Scan waste items to track your sustainability contributions</p>
+            <button class="button primary-btn" onclick="showCameraModal()">Initiate Waste Scan</button>
+        </div>
+
+        <!-- Camera Modal -->
+        <div class="modal-overlay" id="cameraModal">
+            <div class="modal-content">
+                <h3>Waste Item Scanning</h3>
+                <video class="camera-feed" id="cameraFeed"></video>
+                <div class="button-group">
+                    <button class="button primary-btn" onclick="capturePhoto()">Capture</button>
+                    <button class="button secondary-btn" onclick="closeCameraModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Details Section -->
+        <div class="details-section" id="detailsSection">
+            <h3>Waste Item Details</h3>
+            <div class="status-card">
+                <div class="status-item">
+                    <p class="label">Item Type</p>
+                    <p class="value" id="itemType">Plastic Bottle</p>
+                </div>
+                <div class="status-item">
+                    <p class="label">Recommended Bin</p>
+                    <p class="value" id="binType">Recycling Bin</p>
+                </div>
+            </div>
+            <button class="button primary-btn" onclick="initiateQRScan()">Scan Bin QR Code</button>
+        </div>
+
+        <!-- QR Scanning Section -->
+        <div class="modal-overlay" id="qrScanner">
+            <div class="modal-content">
+                <h3>Bin QR Code Verification</h3>
+                <video class="camera-feed" id="qrFeed"></video>
+                <div class="button-group">
+                    <button class="button secondary-btn" onclick="closeQRScanner()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Processing Section -->
+        <div class="result-section" id="processingSection">
+            <div class="loader"></div>
+            <h3>Verifying Disposal</h3>
+            <p>Validating waste disposal process...</p>
+        </div>
+
+        <!-- Result Section -->
+        <div class="result-section" id="resultSection">
+            <svg class="success-icon" id="successIcon" style="display: none;" viewBox="0 0 24 24" fill="none" stroke="#00b894" stroke-width="2">
+                <path d="M20 6L9 17l-5-5"/>
+            </svg>
+            <svg class="error-icon" id="errorIcon" style="display: none;" viewBox="0 0 24 24" fill="none" stroke="#ff7675" stroke-width="2">
+                <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+            <h3 id="resultTitle"></h3>
+            <p id="resultText"></p>
+            <button class="button primary-btn" onclick="resetFlow()" style="margin-top: 2rem;">New Scan</button>
+        </div>
+    </div>
+
+    <script>
+        let cameraStream;
+        let qrScanner;
+
+        function showCameraModal() {
+            document.getElementById('cameraModal').style.display = 'flex';
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    cameraStream = stream;
+                    document.getElementById('cameraFeed').srcObject = stream;
+                })
+                .catch(console.error);
+        }
+
+        function closeCameraModal() {
+            document.getElementById('cameraModal').style.display = 'none';
+            if(cameraStream) cameraStream.getTracks().forEach(track => track.stop());
+        }
+
+        function capturePhoto() {
+            closeCameraModal();
+            document.getElementById('detailsSection').style.display = 'block';
+        }
+
+        function initiateQRScan() {
+            document.getElementById('qrScanner').style.display = 'flex';
+            qrScanner = new Instascan.Scanner({ video: document.getElementById('qrFeed') });
+            Instascan.Camera.getCameras()
+                .then(cameras => {
+                    if(cameras.length > 0) qrScanner.start(cameras[0]);
+                })
+                .catch(console.error);
+
+            qrScanner.addListener('scan', content => {
+                closeQRScanner();
+                showProcessing();
+            });
+        }
+
+        function closeQRScanner() {
+            document.getElementById('qrScanner').style.display = 'none';
+            if(qrScanner) qrScanner.stop();
+        }
+
+        function showProcessing() {
+            document.getElementById('detailsSection').style.display = 'none';
+            document.getElementById('processingSection').style.display = 'block';
+            
+            setTimeout(() => {
+                document.getElementById('processingSection').style.display = 'none';
+                showResult(Math.random() > 0.5);
+            }, 3000);
+        }
+
+        function showResult(success) {
+            const resultSection = document.getElementById('resultSection');
+            resultSection.style.display = 'block';
+            
+            if(success) {
+                document.getElementById('successIcon').style.display = 'block';
+                document.getElementById('resultTitle').textContent = 'Disposal Verified';
+                document.getElementById('resultText').textContent = 'You earned 150 EcoPoints!';
+            } else {
+                document.getElementById('errorIcon').style.display = 'block';
+                document.getElementById('resultTitle').textContent = 'Verification Failed';
+                document.getElementById('resultText').textContent = 'Disposal process incomplete. Please try again.';
+            }
+        }
+
+        function resetFlow() {
+            document.getElementById('resultSection').style.display = 'none';
+            document.getElementById('successIcon').style.display = 'none';
+            document.getElementById('errorIcon').style.display = 'none';
+            document.getElementById('detailsSection').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

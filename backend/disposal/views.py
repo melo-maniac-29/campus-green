@@ -31,7 +31,7 @@ def login_view(request):
 
 from django.shortcuts import render, redirect
 from django.core.files.storage import FileSystemStorage
-from .models import WasteItem
+from .models import WasteItem,QRCode
 
 def scan_waste(request):
     if not request.user.is_authenticated:
@@ -44,7 +44,7 @@ def scan_waste(request):
         # Mock detection (Replace with actual ML model)
         detected_type = "Plastic Bottle" if "bottle" in uploaded_file.name.lower() else "Other"
         points = 10 if detected_type == "Plastic Bottle" else 2
-        bin_type = 'R' if detected_type == "Plastic Bottle" else 'L'
+        bin_type = 'Recycling' if detected_type == "Plastic Bottle" else 'Recycling'
         
         # Create waste item record (Django handles file saving)
         waste_item = WasteItem.objects.create(
@@ -54,19 +54,19 @@ def scan_waste(request):
             bin_type=bin_type,
             image=uploaded_file  # Django will automatically save the file
         )
-        
+        bin_locations = get_bin_locations(bin_type)
+
         return render(request, 'bindetails.html', {
             'item': waste_item,
-            'locations': get_bin_locations(bin_type)
+            'locations': bin_locations
         })
     
     return render(request, 'scan.html')
 
 def get_bin_locations(bin_type):
-    # Mock locations - replace with your actual bin data
-    return [
-        {'name': 'Main Recycling Area', 'qr_code': 'recycle123'},
-        {'name': 'Cafeteria Recycling', 'qr_code': 'recycle456'}
-    ] if bin_type == 'R' else []
+    # Fetch bin locations from the QRCode model based on bin_type
+    bins = QRCode.objects.filter(bin_type=bin_type)
+    locations = [{'name': bin.location, 'qr_code': bin.unique_id} for bin in bins]
+    return locations
 
 
