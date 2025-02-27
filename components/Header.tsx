@@ -88,7 +88,7 @@ export default function Header({ onMenuClick, totalEarnings }: HeaderProps) { //
           if (user.email) {
             localStorage.setItem("userEmail", user.email);
             try {
-              await createUser(user.email, user.name || "Anonymous User");
+              await createUser(user.email, user.name || "Anonymous User"); //from the user info create the user
             } catch (error) {
               console.error("Error creating user:", error);
               // Handle the error appropriately, maybe show a message to the user
