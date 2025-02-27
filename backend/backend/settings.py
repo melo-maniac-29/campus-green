@@ -83,6 +83,8 @@ DATABASES = {
     }
 }
 
+ALLOWED_HOSTS = ['localhost','a3a1-117-232-108-34.ngrok-free.app','127.0.0.1']
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -127,3 +129,7 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CSRF_TRUSTED_ORIGINS=[
+    'https://a3a1-117-232-108-34.ngrok-free.app',
+]

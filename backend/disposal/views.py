@@ -27,3 +27,49 @@ def login_view(request):
         else:
             return render(request, 'login.html', {'error': 'Invalid credentials'})
     return render(request, 'login.html')
+
+
+from django.shortcuts import render, redirect
+from django.core.files.storage import FileSystemStorage
+from .models import WasteItem
+
+def scan_waste(request):
+    if not request.user.is_authenticated:
+        print("ai")
+        return redirect('login')
+    
+    if request.method == 'POST' and 'waste_image' in request.FILES:
+        # Save uploaded image
+        uploaded_file = request.FILES['waste_image']
+        fs = FileSystemStorage()
+        filename = fs.save(uploaded_file.name, uploaded_file)
+        
+        # Mock detection (Replace with actual ML model)
+        detected_type = "Plastic Bottle" if "bottle" in filename.lower() else "Other"
+        points = 10 if detected_type == "Plastic Bottle" else 2
+        bin_type = 'R' if detected_type == "Plastic Bottle" else 'L'
+        
+        # Create waste item record
+        waste_item = WasteItem.objects.create(
+            user=request.user,
+            item_type=detected_type,
+            points=points,
+            bin_type=bin_type,
+            image=uploaded_file  # Save the uploaded image
+        )
+        
+        return render(request, 'result.html', {
+            'item': waste_item,
+            'locations': get_bin_locations(bin_type)
+        })
+    
+    return render(request, 'scan.html')
+
+def get_bin_locations(bin_type):
+    # Mock locations - replace with your actual bin data
+    return [
+        {'name': 'Main Recycling Area', 'qr_code': 'recycle123'},
+        {'name': 'Cafeteria Recycling', 'qr_code': 'recycle456'}
+    ] if bin_type == 'R' else []
+
+
