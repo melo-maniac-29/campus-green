@@ -55,7 +55,7 @@ def scan_waste(request):
             image=uploaded_file  # Django will automatically save the file
         )
         
-        return render(request, 'result.html', {
+        return render(request, 'bindetails.html', {
             'item': waste_item,
             'locations': get_bin_locations(bin_type)
         })
