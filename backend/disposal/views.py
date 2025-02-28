@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate,logout
 from django.contrib.auth.forms import UserCreationForm
 from google.cloud import vision
 from django.core.files.storage import FileSystemStorage
@@ -36,11 +36,13 @@ from backend.models import Points
 def home(request):
     if request.user.is_authenticated:  # Check if user is logged in
         total_points = Points.get_total_points(request.user)  # Fetch total points for the user
+        username = request.user.username
     else:
         total_points = 0  # If user is not logged in, set points to 0
 
     context = {
-        'total_points': total_points  # Passing total_points to the template
+        'total_points': total_points,  # Passing total points to template
+        'username': username  # Passing username to template
     }
 
     return render(request, 'home.html', context)
@@ -260,3 +262,6 @@ def confirm_page(request):
         'qr_code': qr_code,
         'detected_bin_type': bin_type
     })
+def logout_view(request):
+    logout(request)  # This will log out the current user
+    return redirect('/')

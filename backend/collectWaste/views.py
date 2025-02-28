@@ -74,3 +74,21 @@ def verification_result(request, proof_id):
         'is_verified': is_verified,
         'points_earned': points_earned
     })
+
+
+from django.db.models import Sum
+from django.contrib.auth.models import User
+from django.shortcuts import render
+from .models import Points
+
+def leaderboard(request):
+    # Fetch users with their total points and order by total points in descending order
+    leaderboard_data = User.objects.annotate(total_points=Sum('points__points')).order_by('-total_points')
+
+    # Only show users who have points (total_points greater than 0)
+    leaderboard_data = leaderboard_data.filter(total_points__gt=0)
+
+    context = {
+        'leaderboard': leaderboard_data,
+    }
+    return render(request, 'leaderboard.html', context)

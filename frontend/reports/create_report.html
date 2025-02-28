@@ -1,85 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Report Waste</title>
+    <title>EcoTrack - Environmental Report</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        /* Include all previous dashboard styles */
+        :root {
+            --primary-dark: #0a0a0a;
+            --secondary-dark: #1a1a1a;
+            --accent-green: #157c3b;
+            --highlight-green: #0e4422;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+        }
+
+        .points-container {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--secondary-dark);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(22, 163, 74, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .points-count {
+            font-weight: 600;
+            color: var(--accent-green);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 2rem;
         }
-        .form-container {
-            max-width: 500px;
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-link {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .logo-link i {
+            stroke: var(--accent-green);
+        }
+
+        /* Add form-specific styles */
+        .report-container {
+            max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            background-color: #f9f9f9;
+            background: var(--secondary-dark);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid rgba(77, 118, 101, 0.15);
         }
-        .form-container h1 {
-            text-align: center;
-            margin-bottom: 20px;
+
+        .form-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
         }
-        .form-container label {
+
+        .form-description {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
         }
-        .form-container input[type="text"],
-        .form-container textarea,
-        .form-container input[type="file"] {
+
+        .form-input,
+        .form-select,
+        .form-textarea {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
+            padding: 0.75rem;
+            background: var(--primary-dark);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
         }
-        .form-container textarea {
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            border-color: var(--accent-green);
+            outline: none;
+        }
+
+        .form-textarea {
             resize: vertical;
-            height: 100px;
+            min-height: 120px;
         }
-        .form-container button {
+
+        .submit-button {
             width: 100%;
-            padding: 10px;
-            background-color: #28a745;
-            color: white;
+            padding: 1rem;
+            background: var(--accent-green);
+            color: var(--text-primary);
             border: none;
-            border-radius: 5px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
-        .form-container button:hover {
-            background-color: #218838;
+
+        .submit-button:hover {
+            background: var(--highlight-green);
         }
     </style>
 </head>
+
 <body>
-    <div class="form-container">
-        <h1>Report Waste</h1>
+    <!-- Points Counter -->
+    
+
+    <!-- Logo Container -->
+    <div class="logo-container">
+        <a href="dashboard.html" class="logo-link">
+            <i data-lucide="leaf" width="36" height="36"></i>
+            <span class="logo-text">EcoTrack</span>
+        </a>
+    </div>
+
+    <!-- Report Form Section -->
+    <div class="report-container">
+        <h1 class="form-title">Report Environmental Activity</h1>
+        <p class="form-description">Submit details about environmental issues or your sustainable activities</p>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            
-            <!-- Title Field -->
-            <label for="title">Title:</label>
-            <input type="text" id="title" name="title" placeholder="Enter a title for your report" required>
-            
-            <!-- Location Field -->
-            <label for="location">Location:</label>
-            <input type="text" id="location" name="location" placeholder="Enter the location where the waste was found" required>
-            
-            <!-- Description Field -->
-            <label for="description">Description:</label>
-            <textarea id="description" name="description" placeholder="Describe the waste and any additional details" required></textarea>
-            
-            <!-- Image Upload Field -->
-            <label for="waste_image">Upload Image:</label>
-            <input type="file" id="waste_image" name="waste_image" accept="image/*" required>
-            
-            <!-- Submit Button -->
-            <button type="submit">Submit Report</button>
+            <div class="form-group">
+                <h2 class="card-title">New Report</h2><br>
+                <p class="card-content">Fill out the form below to submit your environmental report</p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Report Type</label>
+                <select class="form-select">
+                    <option value="activity">Sustainable Activity</option>
+                    <option value="issue">Environmental Issue</option>
+                    <option value="suggestion">Improvement Suggestion</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Location</label>
+                <input type="text" class="form-input" placeholder="Enter location">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Date</label>
+                <input type="date" class="form-input">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Title</label>
+                <input type="text" class="form-input" placeholder="Brief title for your report">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea class="form-textarea" placeholder="Provide details about your environmental report"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Upload Image (Optional)</label>
+                <input type="file" class="form-input">
+            </div>
+
+            <button type="submit" class="submit-button">
+                Submit Report
+                <i data-lucide="arrow-right" width="16" height="16" style="margin-left: 8px;"></i>
+            </button>
         </form>
     </div>
+
+    <script>
+        lucide.createIcons();
+        
+        // Simple form submission handling
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your environmental report!');
+            
+        });
+    </script>
 </body>
+
 </html>

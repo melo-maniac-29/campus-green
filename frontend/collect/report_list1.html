@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report List</title>
+    <style>
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px;
+            width: 300px;
+            display: inline-block;
+            vertical-align: top;
+        }
+        .card img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .card h3 {
+            margin: 10px 0;
+        }
+        .card p {
+            margin: 5px 0;
+        }
+        .card button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .card button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <h1>Waste Reports</h1>
+    {% for report in reports %}
+        <div class="card">
+            <img src="{{ report.image.url }}" alt="{{ report.title }}">
+            <h3>{{ report.title }}</h3>
+            <p><strong>Location:</strong> {{ report.location }}</p>
+            <p><strong>Description:</strong> {{ report.description }}</p>
+            <p><strong>Reported by:</strong> {{ report.user.username }}</p>
+            <p><strong>Reported on:</strong> {{ report.created_at }}</p>
+            <a href="{% url 'upload_cleaning_proof' report.id %}">
+                <button>Upload Cleaning Proof</button>
+            </a>
+        </div>
+    {% endfor %}
+</body>
+</html>

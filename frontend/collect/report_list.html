@@ -3,54 +3,293 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Report List</title>
+    <title>Campus Green - Collect Waste</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        .card {
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            padding: 15px;
-            margin: 10px;
-            width: 300px;
-            display: inline-block;
-            vertical-align: top;
+        :root {
+            --primary-dark: #0a0a0a;
+            --secondary-dark: #1a1a1a;
+            --accent-green: #157c3b;
+            --highlight-green: #0e4422;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
         }
-        .card img {
+
+        .points-container {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--secondary-dark);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(22, 163, 74, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .points-count {
+            font-weight: 600;
+            color: var(--accent-green);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-dark);
+            color: var(--text-primary);
+            padding: 2rem;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-link {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .logo-link i {
+            stroke: var(--accent-green);
+        }
+
+        .waste-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .waste-card {
+            background: var(--secondary-dark);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(77, 118, 101, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .waste-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .status-success {
+            color: #16a34a;
+            font-weight: 600;
+        }
+
+        .status-verified {
+            color: #f59e0b;
+            font-weight: 600;
+        }
+
+        .status-collecting {
+            color: #3b82f6;
+            font-weight: 600;
+        }
+
+        .action-button {
             width: 100%;
-            border-radius: 10px;
-        }
-        .card h3 {
-            margin: 10px 0;
-        }
-        .card p {
-            margin: 5px 0;
-        }
-        .card button {
-            background-color: #28a745;
-            color: white;
+            padding: 0.75rem;
+            border-radius: 8px;
             border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
+            background: var(--accent-green);
+            color: white;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .action-button:hover {
+            opacity: 0.9;
+        }
+
+        .file-upload {
+            margin-top: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
             cursor: pointer;
         }
-        .card button:hover {
-            background-color: #218838;
+
+        .points-earned {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
 <body>
-    <h1>Waste Reports</h1>
-    {% for report in reports %}
-        <div class="card">
-            <img src="{{ report.image.url }}" alt="{{ report.title }}">
-            <h3>{{ report.title }}</h3>
-            <p><strong>Location:</strong> {{ report.location }}</p>
-            <p><strong>Description:</strong> {{ report.description }}</p>
-            <p><strong>Reported by:</strong> {{ report.user.username }}</p>
-            <p><strong>Reported on:</strong> {{ report.created_at }}</p>
-            <a href="{% url 'upload_cleaning_proof' report.id %}">
-                <button>Upload Cleaning Proof</button>
-            </a>
+    <!-- Points Counter -->
+    <div class="points-container">
+        <i data-lucide="coins" width="20" height="20" stroke="#16a34a"></i>
+        <span class="points-count">1,850</span>
+    </div>
+
+    <!-- Logo -->
+    <div class="logo-container">
+        <a href="{% url 'home' %}" class="logo-link">
+            <i data-lucide="leaf" width="36" height="36"></i>
+            <span class="logo-text">Campus Green</span>
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>Collect Wastes</h1>
+        <p class="text-muted">Track and collect waste from various places</p>
+
+        <div class="waste-grid">
+            <!-- Park A - Success -->
+            <div class="waste-card">
+                <h3>Park A</h3>
+                <p>Plastic Waste</p>
+                <div class="status-success">Status: Successfully Collected</div>
+                <div class="points-earned">
+                    <span>+5 Points</span>
+                    <i data-lucide="check-circle" class="text-green-500"></i>
+                </div>
+            </div>
+
+            <!-- Beach B - Verified -->
+            <div class="waste-card">
+                <h3>Beach B</h3>
+                <p>Glass Waste</p>
+                <div class="status-verified">Status: Verified</div>
+                <div class="file-upload">
+                    <input type="file" class="file-input" id="file-upload">
+                    <label for="file-upload" class="file-label">
+                        <i data-lucide="upload"></i>
+                        Choose File
+                    </label>
+                    <button class="action-button">Submit Proof</button>
+                    <p class="text-muted">Submit proof of collection</p>
+                </div>
+            </div>
+
+            <!-- Street C - Collecting -->
+            <div class="waste-card">
+                <h3>Street C</h3>
+                <p>Metal Waste</p>
+                <div class="status-collecting">Status: On Collection</div>
+                <button class="action-button">Verify Now</button>
+            </div>
+
+            <!-- Park D - Pending -->
+            <div class="waste-card">
+                <h3>Park D</h3>
+                <p>Paper Waste</p>
+                <div class="text-yellow-500">Status: Pending</div>
+                <button class="action-button">Collect</button>
+            </div>
+
+            <!-- Market E - Pending -->
+            <div class="waste-card">
+                <h3>Market E</h3>
+                <p>Plastic Waste</p>
+                <div class="text-yellow-500">Status: Pending</div>
+                <button class="action-button">Select</button>
+            </div>
+
+            <!-- Beach F - Pending -->
+            <div class="waste-card">
+                <h3>Beach F</h3>
+                <p>Glass Waste</p>
+                <div class="text-yellow-500">Status: Pending</div>
+                <button class="action-button">Select</button>
+            </div>
         </div>
-    {% endfor %}
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Handle button interactions
+        document.querySelectorAll('.action-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const card = e.target.closest('.waste-card');
+                const statusElement = card.querySelector('div:not(.points-earned)');
+                
+                if(button.textContent === 'Collect') {
+                    statusElement.textContent = 'Status: On Collection';
+                    statusElement.className = 'status-collecting';
+                    button.textContent = 'Verify Now';
+                }
+                else if(button.textContent === 'Verify Now') {
+                    statusElement.textContent = 'Status: Verified';
+                    statusElement.className = 'status-verified';
+                    button.replaceWith(createFileUploadSection());
+                }
+            });
+        });
+
+        function createFileUploadSection() {
+            const div = document.createElement('div');
+            div.className = 'file-upload';
+            div.innerHTML = `
+                <input type="file" class="file-input">
+                <label class="file-label">
+                    <i data-lucide="upload"></i>
+                    Choose File
+                </label>
+                <button class="action-button">Submit Proof</button>
+                <p class="text-muted">Submit proof of collection</p>
+            `;
+            return div;
+        }
+
+        // Handle file uploads
+        document.addEventListener('change', (e) => {
+            if(e.target.matches('.file-input')) {
+                const button = e.target.closest('.file-upload').querySelector('.action-button');
+                button.addEventListener('click', handleFileSubmit);
+            }
+        });
+
+        function handleFileSubmit(e) {
+            const card = e.target.closest('.waste-card');
+            const statusElement = card.querySelector('div:not(.points-earned)');
+            
+            card.querySelector('.file-upload').remove();
+            statusElement.textContent = 'Status: Successfully Collected';
+            statusElement.className = 'status-success';
+            
+            const pointsDiv = document.createElement('div');
+            pointsDiv.className = 'points-earned';
+            pointsDiv.innerHTML = `
+                <span>+5 Points</span>
+                <i data-lucide="check-circle"></i>
+            `;
+            card.appendChild(pointsDiv);
+            lucide.createIcons();
+        }
+    </script>
 </body>
 </html>

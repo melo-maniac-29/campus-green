@@ -207,7 +207,7 @@
 
     <!-- Dashboard Header -->
     <div class="dashboard-header">
-        <h1 class="welcome-heading">Welcome back, Alexander!</h1>
+        <h1 class="welcome-heading">Welcome back,{{ username }}</h1>
         <p class="dashboard-description">
             Track your environmental impact and contributions to sustainability. Monitor your eco-progress,
             manage rewards, and contribute to a greener planet.
@@ -272,7 +272,7 @@
             </span>
         </a>
 
-        <a href="leaderboard.html" class="dashboard-card">
+        <a href="{% url 'leaderboard' %}" class="dashboard-card">
             <div class="card-icon">
                 <i data-lucide="trophy" width="24" height="24"></i>
             </div>
@@ -288,7 +288,7 @@
 
         
 
-        <a href="logout.html" class="dashboard-card">
+        <a href="{% url 'logout' %}" class="dashboard-card">
             <div class="card-icon">
                 <i data-lucide="log-out" width="24" height="24"></i>
             </div>
