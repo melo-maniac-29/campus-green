@@ -86,8 +86,8 @@ ALLOWED_HOSTS = ['localhost','*','127.0.0.1']
 
 import os
 
-# Set the environment variable for Google Cloud credentials
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:\\Users\\amilm\\Code\\RIT_HACKATHON\\campus-green\\backend\\disposal\\lustrous-braid-452220-u1-e95af2db2501.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"C:\Users\amilm\Code\RIT_HACKATHON\lustrous-braid-452220-u1-a2bc9774f46d.json"
+
 
 # Media File Settings
 MEDIA_URL = '/media/'  # URL for accessing media files
