@@ -1,20 +1,156 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #1a1a1a;
+            margin: 0;
+            position: relative;
+            color: #ffffff;
+        }
+
+        .logo-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .login-container {
+            background: #2d2d2d;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        p {
+            color: #a0a0a0;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #d1d1d1;
+            font-weight: 500;
+        }
+
+        input {
+            width: 94%;
+            padding: 0.75rem;
+            border: 1px solid #404040;
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: #3d3d3d;
+            color: #ffffff;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2);
+        }
+
+        input::placeholder {
+            color: #6b7280;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #16a34a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #12803d;
+        }
+
+        .signup-text {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #a0a0a0;
+        }
+
+        .signup-text a {
+            color: #16a34a;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .signup-text a:hover {
+            color: #12803d;
+        }
+    </style>
 </head>
 <body>
-    <h2>Login</h2>
-    {% if error %}
-        <p style="color:red;">{{ error }}</p>
-    {% endif %}
-    <form method="post">
-        {% csrf_token %}
-        <label for="username">Username:</label>
-        <input type="text" name="username" required>
-        <label for="password">Password:</label>
-        <input type="password" name="password" required>
-        <button type="submit">Login</button>
-    </form>
+    <div class="logo-container">
+        <i data-lucide="leaf" width="32" height="32" stroke="#16a34a"></i>
+        <span class="logo-text">Campus-Green</span>
+    </div>
+
+    <div class="login-container">
+        <h1>Login</h1>
+        <p>Enter your credentials to access your account</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="join/ode"> <!-- Added name="username" -->
+            </div>
+    
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="••••••••"> <!-- Added name="password" -->
+            </div>
+    
+            <button type="submit">Login</button>
+        </form>
+    
+        <p class="signup-text">
+            Don't have an account? <a href="{% url 'register' %}">Sign up</a>
+        </p>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>

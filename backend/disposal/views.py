@@ -30,7 +30,20 @@ def login_view(request):
         else:
             return render(request, 'login.html', {'error': 'Invalid credentials'})
     return render(request, 'login.html')
+from django.shortcuts import render
+from backend.models import Points
 
+def home(request):
+    if request.user.is_authenticated:  # Check if user is logged in
+        total_points = Points.get_total_points(request.user)  # Fetch total points for the user
+    else:
+        total_points = 0  # If user is not logged in, set points to 0
+
+    context = {
+        'total_points': total_points  # Passing total_points to the template
+    }
+
+    return render(request, 'home.html', context)
 def scan_waste(request):
     if not request.user.is_authenticated:
         return redirect('login')

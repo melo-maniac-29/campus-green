@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoTrack Dashboard</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-dark: #0a0a0a;
+            --secondary-dark: #1a1a1a;
+            --accent-green: #157c3b;
+            --highlight-green: #0e4422;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+        }
+
+        /* Add points counter styling */
+        .points-container {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--secondary-dark);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(22, 163, 74, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .points-count {
+            font-weight: 600;
+            color: var(--accent-green);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-link {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .logo-link i {
+            stroke: var(--accent-green);
+        }
+
+
+
+        .dashboard-header {
+            margin-bottom: 3rem;
+        }
+
+        .dashboard-card:hover {
+            background: var(--accent-green);
+        }
+
+        .welcome-heading {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .dashboard-description {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .dashboard-card {
+            background: var(--secondary-dark);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: 1px solid rgba(77, 118, 101, 0.15);
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            background: var(--accent-green);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(22, 163, 74, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: white; /* Change color to white */
+        }
+        
+
+        .card-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-link {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .card-link:hover {
+            opacity: 0.8;
+        }
+
+        a {
+            text-decoration: none;
+        }
+        
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1.5rem;
+            }
+
+            .welcome-heading {
+                font-size: 2rem;
+            }
+
+            .dashboard-card {
+                min-height: 220px;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Points Counter -->
+    <div class="points-container">
+        <i data-lucide="coins" width="20" height="20" stroke="#16a34a"></i>
+        <span class="points-count">{{ total_points }}</span>
+
+    </div>
+
+    <!-- Logo Container -->
+    <div class="logo-container">
+        <a href="dashboard.html" class="logo-link">
+            <i data-lucide="leaf" width="36" height="36"></i>
+            <span class="logo-text">Campus-Green</span>
+        </a>
+    </div>
+
+
+
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <h1 class="welcome-heading">Welcome back, Alexander!</h1>
+        <p class="dashboard-description">
+            Track your environmental impact and contributions to sustainability. Monitor your eco-progress,
+            manage rewards, and contribute to a greener planet.
+        </p>
+    </div>
+
+    <!-- Dashboard Cards Grid -->
+    <div class="cards-grid">
+        <a href="{% url 'create_report' %}" class="dashboard-card">
+            <div class="card-icon">
+                <i data-lucide="file-text" width="24" height="24"></i>
+            </div>
+            <h3 class="card-title">Environmental Report</h3>
+            <p class="card-content">
+                Generate detailed reports of your environmental impact and sustainability progress.
+            </p>
+            <span class="card-link">
+                View Reports
+                <i data-lucide="arrow-right" width="16" height="16"></i>
+            </span>
+        </a>
+
+        <a href="{% url 'report_list' %}" class="dashboard-card">
+            <div class="card-icon">
+                <i data-lucide="recycle" width="24" height="24"></i>
+            </div>
+            <h3 class="card-title">Collect Waste</h3>
+            <p class="card-content">
+                Log your recycling activities and track your collected waste metrics.
+            </p>
+            <span class="card-link">
+                Start Collecting
+                <i data-lucide="arrow-right" width="16" height="16"></i>
+            </span>
+        </a>
+
+        <a href="{% url 'scan_waste' %}" class="dashboard-card">
+            <div class="card-icon">
+                <i data-lucide="qr-code" width="24" height="24"></i>
+            </div>
+            <h3 class="card-title">Scan QR</h3>
+            <p class="card-content">
+                Scan recycling codes to log activities and earn instant rewards.
+            </p>
+            <span class="card-link">
+                Open Scanner
+                <i data-lucide="arrow-right" width="16" height="16"></i>
+            </span>
+        </a>
+
+        <a href="rewards.html" class="dashboard-card">
+            <div class="card-icon">
+                <i data-lucide="badge-dollar-sign" width="24" height="24"></i>
+            </div>
+            <h3 class="card-title">Eco Rewards</h3>
+            <p class="card-content">
+                Redeem your earned green tokens for exclusive eco-friendly rewards.
+            </p>
+            <span class="card-link">
+                View Rewards
+                <i data-lucide="arrow-right" width="16" height="16"></i>
+            </span>
+        </a>
+
+        <a href="leaderboard.html" class="dashboard-card">
+            <div class="card-icon">
+                <i data-lucide="trophy" width="24" height="24"></i>
+            </div>
+            <h3 class="card-title">Green Leaderboard</h3>
+            <p class="card-content">
+                Compete with other eco-warriors in our sustainability challenge.
+            </p>
+            <span class="card-link">
+                View Rankings
+                <i data-lucide="arrow-right" width="16" height="16"></i>
+            </span>
+        </a>
+
+        
+
+        <a href="logout.html" class="dashboard-card">
+            <div class="card-icon">
+                <i data-lucide="log-out" width="24" height="24"></i>
+            </div>
+            <h3 class="card-title">Log Out</h3>
+            <p class="card-content">
+                Securely exit your EcoTrack session. Come back soon!
+            </p>
+            <span class="card-link">
+                Sign Out
+                <i data-lucide="arrow-right" width="16" height="16"></i>
+            </span>
+        </a>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

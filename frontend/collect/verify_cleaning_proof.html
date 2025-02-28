@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cleaning Result</title>
+</head>
+<body>
+    <h1>Cleaning Result</h1>
+    {% if is_verified %}
+        <p>✅ Cleaning verified! You earned {{ points_earned }} points.</p>
+    {% else %}
+        <p>❌ Cleaning not verified. Please try again.</p>
+    {% endif %}
+    <a href="{% url 'report_list' %}">Back to Report List</a>
+</body>
+</html>
