@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Green - Rewards</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-dark: #0a0a0a;
+            --secondary-dark: #1a1a1a;
+            --accent-green: #157c3b;
+            --highlight-green: #0e4422;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --card-bg: #1a1a1a;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .count-container {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--secondary-dark);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(22, 163, 74, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .points-count {
+            font-weight: 600;
+            color: var(--accent-green);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-link {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .logo-link i {
+            stroke: var(--accent-green);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--primary-dark);
+            color: var(--text-primary);
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .rewards-grid {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .eco-points, .achievements {
+            background: var(--secondary-dark);
+            border-radius: 12px;
+            padding: 1.5rem;
+            flex: 1;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .points-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .points-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.1);
+            height: 8px;
+            border-radius: 8px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            width: 60%;
+            background: var(--accent-green);
+            height: 100%;
+            border-radius: 8px;
+        }
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .category {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            color: var(--text-primary);
+        }
+
+        .achievements-list {
+            margin-top: 1rem;
+        }
+
+        .achievement {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .achievement:last-child {
+            border-bottom: none;
+        }
+
+        .achievement-icon {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .achievement-icon i {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.5rem;
+            border-radius: 50%;
+        }
+
+        .points-badge {
+            background: var(--accent-green);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+        }
+
+        .level {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Points Counter -->
+    <div class="count-container">
+        <i data-lucide="coins" width="20" height="20" stroke="#16a34a"></i>
+        <span class="points-count">2,450</span>
+    </div>
+
+    <!-- Logo Container -->
+    <div class="logo-container">
+        <a href="dashboard.html" class="logo-link">
+            <i data-lucide="leaf" width="36" height="36"></i>
+            <span class="logo-text">Campus Green</span>
+        </a>
+    </div>
+
+    <div class="container">
+        <h1>Rewards & Achievements</h1>
+        <p>Earn rewards for your environmental contributions</p>
+
+        <div class="rewards-grid">
+            <div class="eco-points">
+                <div class="points-header">
+                    <span>Your EcoPoints</span>
+                    <span class="level">Level 3</span>
+                </div>
+                <div class="points-value">1,250</div>
+                <div class="progress-bar">
+                    <div class="progress-bar-fill"></div>
+                </div>
+                <p>Next level: 2,000</p>
+                <div class="categories">
+                    <div class="category">♻️ Recycling <br> 450</div>
+                    <div class="category">🌲 Planting <br> 350</div>
+                    <div class="category">🌿 Conservation <br> 300</div>
+                    <div class="category">⭐ Bonus <br> 150</div>
+                </div>
+            </div>
+
+            <div class="achievements">
+                <h2>Recent Achievements</h2>
+                <p>Badges earned for your environmental efforts</p>
+                <div class="achievements-list">
+                    <div class="achievement">
+                        <div class="achievement-icon">
+                            <i data-lucide="award"></i>
+                            <span><strong>Recycling Champion</strong><br>Recycled over 20kg of materials</span>
+                        </div>
+                        <span class="points-badge">+100 pts</span>
+                    </div>
+                    <div class="achievement">
+                        <div class="achievement-icon">
+                            <i data-lucide="tree"></i>
+                            <span><strong>Tree Planter</strong><br>Planted your first tree</span>
+                        </div>
+                        <span class="points-badge">+150 pts</span>
+                    </div>
+                    <div class="achievement">
+                        <div class="achievement-icon">
+                            <i data-lucide="star"></i>
+                            <span><strong>Eco Enthusiast</strong><br>Completed 5 environmental activities</span>
+                        </div>
+                        <span class="points-badge">+75 pts</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

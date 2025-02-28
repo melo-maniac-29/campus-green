@@ -205,12 +205,12 @@ def scan_waste(request):
         # Get bin locations
         bin_locations = get_bin_locations(bin_type)
         
-        return render(request, 'bindetails.html', {
+        return render(request, 'scanner/bindetails.html', {
             'item': waste_item,
             'locations': bin_locations
         })
     
-    return render(request, 'scan.html')
+    return render(request, 'scanner/scan.html')
 
 def get_bin_locations(bin_type):
     # Fetch bin locations from the QRCode model based on bin_type
@@ -258,7 +258,7 @@ def confirm_page(request):
 
     qr_code = QRCode.objects.get(unique_id=bin_id)
 
-    return render(request, 'confirm.html', {
+    return render(request, 'scanner/confirm.html', {
         'qr_code': qr_code,
         'detected_bin_type': bin_type
     })
