@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan Result</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .item-details {
+            margin: 20px 0;
+        }
+        .item-details img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .button-container {
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Scan Result</h1>
+    
+    <div class="item-details">
+        <h2>Item Type: {{ item.item_type }}</h2>
+        <p><strong>Points Earned:</strong> {{ item.points }}</p>
+        <p><strong>Bin Type:</strong> {{ item.bin_type }}</p>
+        <img src="{{ item.image.url }}" alt="Waste Item Image">
+    </div>
+
+    <h3>Recommended Bin Locations:</h3>
+    <ul>
+        {% for location in locations %}
+            <li>{{ location.name }} (QR Code: {{ location.qr_code }})</li>
+        {% empty %}
+            <li>No recommended locations available.</li>
+        {% endfor %}
+    </ul>
+
+    <div class="button-container">
+        <a href="{% url 'scan_qr' %}?bin_type={{ item.bin_type }}">
+            <button>Scan Qr Code</button>
+        </a>
+    </div>
+</div>
+
+</body>
+</html>
