@@ -1,6 +1,6 @@
-Let's create a more detailed README.md file for your campus-green repository. Here is a suggested structure:
+Let's create a more detailed `README.md` file for your `campus-green` repository. Here is a suggested structure:
 
-markdown
+```markdown
 # Campus Green
 
 Campus Green is a Python-based project aimed at enhancing the sustainability and environmental friendliness of campuses. 
@@ -16,55 +16,76 @@ Campus Green is a Python-based project aimed at enhancing the sustainability and
 To get started with the project, follow these steps:
 
 1. Clone the repository:
-   bash
+   ```bash
    git clone https://github.com/melo-maniac-29/campus-green.git
-   
+   ```
 2. Navigate to the project directory:
-   bash
+   ```bash
    cd campus-green
-   
+   ```
 3. Create a virtual environment:
-   bash
+   ```bash
    python -m venv venv
-   
+   ```
 4. Activate the virtual environment:
    - On Windows:
-     bash
+     ```bash
      venv\Scripts\activate
-     
+     ```
    - On macOS/Linux:
-     bash
+     ```bash
      source venv/bin/activate
-     
+     ```
 5. Install the dependencies:
-   bash
+   ```bash
    pip install -r requirements.txt
-   
+   ```
 
 ## Usage
 
 To run the project, execute the following command:
+```bash
 cd backend
 python manage.py runserver
+```
 
+Create a .env file with 
 
+{
+  "type": "service_account",
+  "project_id": "",
+  "private_key_id": "",
+  "private_key": "",
+  "client_email": "",
+  "client_id": "",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "",
+  "universe_domain": "googleapis.com"
+}
+
+from 
+  https://console.cloud.google.com/apis/api/vision.googleapis.com
+
+  
 ## Contributing
 
 We welcome contributions to enhance Campus Green! To contribute, follow these steps:
 
 1. Fork the repository.
 2. Create a new branch:
-   bash
+   ```bash
    git checkout -b feature-branch
-   
+   ```
 3. Make your changes and commit them:
-   bash
+   ```bash
    git commit -m "Add new feature"
-   
+   ```
 4. Push to the branch:
-   bash
+   ```bash
    git push origin feature-branch
-   
+   ```
 5. Create a pull request.
 
 ## License
@@ -74,6 +95,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## Contact
 
 For any inquiries or support, please contact [melo-maniac-29](https://github.com/melo-maniac-29).
+```
 
-
-You can edit the README.md file in your repository by navigating to [this link](https://github.com/melo-maniac-29/campus-green/edit/main/README.md) and pasting the above content.
+You can edit the `README.md` file in your repository by navigating to [this link](https://github.com/melo-maniac-29/campus-green/edit/main/README.md) and pasting the above content.
